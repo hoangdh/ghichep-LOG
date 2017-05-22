@@ -126,8 +126,8 @@ yum install -y nginx
 - **Bước 1**: Chỉnh sửa file cấu hình của `nginx`:
 
 ```
-sed -i '/#access_log */ s/logs\/access.log  main/syslog:server=192.168.100.141,facility=local2,tag=nginx_access,severity=info combined/' nginx.conf
-sed -e '/nginx_access/ s/#access_log/access_log/' nginx.conf
+sed -i '/#access_log */ s/logs\/access.log  main/syslog:server=192.168.100.141,facility=local2,tag=nginx_access,severity=info combined/' /etc/nginx.conf
+sed -e '/nginx_access/ s/#access_log/access_log/' /etc/nginx.conf
 ```
 
 - **Bước 2**: Cấu hình `rsyslog`:
