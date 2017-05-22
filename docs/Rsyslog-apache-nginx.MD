@@ -53,7 +53,7 @@ Nếu bạn muốn thay thế tên folder, vui lòng chỉnh sửa câu lệnh t
 
 - **Bước 3**: Cấu hình tường lửa Firewalld và SELinux
 
-Nếu server của bạn có sử dụng Firewalld, hãy mở port cho httpd bằng lệnh:
+Nếu server của bạn có sử dụng Firewalld, hãy mở port cho `rsyslog` bằng lệnh:
 
 ```
 firewall-cmd --permanent --add-port=514/udp
@@ -71,8 +71,6 @@ Chỉnh sửa file cấu hình của SELinux:
 ```
 sed -i '/SELINUX=enforcing/ s/enforcing/disabled/' /etc/sysconfig/selinux
 ```
-
-Sửa dòng `SELINUX=enforcing` thành `SELINUX=disabled`.
 
 <a name="22"></a>
 ### 2.2 Cấu hình Server đẩy log
@@ -113,6 +111,13 @@ systemctl restart apache2
 systemctl restart rsyslog
 ```
 
+Cấu hình tường lửa UFW, nếu đang bật:
+
+```
+ufw allow 80/tcp
+ufw reload
+```
+
 <a name="222"></a>
 #### 2.2.2 Cấu hình trên Server sử dụng Nginx (CentOS)
 
@@ -123,11 +128,29 @@ yum install -y epel-release
 yum install -y nginx
 ```
 
+Nếu server của bạn có sử dụng Firewalld, hãy mở port cho httpd bằng lệnh:
+
+```
+firewall-cmd --permanent --add-port=80/udp
+firewall-cmd --reload
+```
+
+Tắt SELINUX tức thời bằng lệnh:
+
+```
+setenforce 0
+```
+
+Chỉnh sửa file cấu hình của SELinux:
+
+```
+sed -i '/SELINUX=enforcing/ s/enforcing/disabled/' /etc/sysconfig/selinux
+```
+
 - **Bước 1**: Chỉnh sửa file cấu hình của `nginx`:
 
 ```
-sed -i '/#access_log */ s/logs\/access.log  main/syslog:server=192.168.100.141,facility=local2,tag=nginx_access,severity=info combined/' /etc/nginx.conf
-sed -e '/nginx_access/ s/#access_log/access_log/' /etc/nginx.conf
+sed -i '/access_log */ s/\/var\/log\/nginx\/access.log  main/syslog:server=192.168.100.141,facility=local2,tag=nginx_access,severity=info combined/' /etc/nginx/nginx.conf
 ```
 
 - **Bước 2**: Cấu hình `rsyslog`:
@@ -147,3 +170,29 @@ systemctl restart rsyslog
 
 <a name="3"></a>
 ## 3. Kiểm tra
+
+Chúng ta tạo một vài request đến 2 web server trên máy chủ `rsyslog`.
+
+```
+for x in {1..10}; do curl 192.168.100.140; curl 192.168.100.141; sleep 1; done
+```
+
+Di chuyển vào thư mục `/var/log/`, chúng ta sẽ thấy 2 thư mục mới được tạo chứa log của 2 host `centos7` và `ubuntu16`.
+
+```
+cd /var/log/
+ls
+```
+
+<img src="../images/test-1.png" />
+
+Truy cập lần lượt vào 2 thư mục này, chúng ta sẽ thấy file log của nginx và apache được đẩy về.
+
+<img src="../images/test-nginx.png" />
+
+<img src="../images/test-apache.png" />
+
+### Tham khảo:
+
+- https://github.com/hocchudong/Syslog
+- https://nginx.org/en/docs/syslog.html
