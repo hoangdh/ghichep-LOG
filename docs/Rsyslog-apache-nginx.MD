@@ -17,7 +17,7 @@
 
 ### Mô hình cài đặt
 
-<img src="../images/topo.png" />
+<img src="../images/topo.png" width="75%" />
 
 ### IP Planning
 
@@ -69,7 +69,7 @@ setenforce 0
 Chỉnh sửa file cấu hình của SELinux:
 
 ```
-sed -i '/SELINUX=enforcing/ s/enforcing/disabled/' /etc/sysconfig/selinux
+sed -i '/SELINUX=enforcing/ s/enforcing/disabled/' /etc/selinux/config
 ```
 
 <a name="22"></a>
@@ -104,7 +104,7 @@ echo -e "*.* @192.168.100.141" >> /etc/rsyslog.d/50-default.conf
 
 **Lưu ý:** Thay thế dịa chỉ IP của rsyslog của bạn.
 
-Sau đó khởi động lại `apache2` và `ryslog`
+Sau đó khởi động lại `apache2` và `rsyslog`
 
 ```
 systemctl restart apache2
@@ -128,7 +128,7 @@ yum install -y epel-release
 yum install -y nginx
 ```
 
-Nếu server của bạn có sử dụng Firewalld, hãy mở port cho httpd bằng lệnh:
+Nếu server của bạn có sử dụng Firewalld, hãy mở port cho nginx bằng lệnh:
 
 ```
 firewall-cmd --permanent --add-port=80/udp
@@ -144,7 +144,7 @@ setenforce 0
 Chỉnh sửa file cấu hình của SELinux:
 
 ```
-sed -i '/SELINUX=enforcing/ s/enforcing/disabled/' /etc/sysconfig/selinux
+sed -i '/SELINUX=enforcing/ s/enforcing/disabled/' /etc/selinux/config
 ```
 
 - **Bước 1**: Chỉnh sửa file cấu hình của `nginx`:
@@ -159,9 +159,9 @@ sed -i '/access_log */ s/\/var\/log\/nginx\/access.log  main/syslog:server=192.1
 echo -e "*.* @192.168.100.141" >> /etc/rsyslog.conf
 ```
 
-**Lưu ý:** Thay thế dịa chỉ IP của rsyslog của bạn.
+**Lưu ý:** Thay thế dịa chỉ IP của rsyslog của bạn ở 2 câu lệnh trên.
 
-Sau đó khởi động lại `nginx` và `ryslog`
+Sau đó khởi động lại `nginx` và `rsyslog`
 
 ```
 systemctl restart nginx
