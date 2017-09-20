@@ -41,7 +41,7 @@ sed -i '/$UDPServerRun 514/ s/^#*//' /etc/rsyslog.conf
 - **Bước 2**: Phân loại log của mỗi host vào từng folder (tên folder là HOSTNAME)
 
 ```
-echo -e "\$template TmplAuth,"/var/log/%HOSTNAME%/%PROGRAMNAME%.log"
+echo -e "\$template TmplAuth,\"/var/log/%HOSTNAME%/%PROGRAMNAME%.log\"
 *.* ?TmplAuth" >> /etc/rsyslog.conf
 ```
 
