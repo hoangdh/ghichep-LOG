@@ -8,3 +8,4 @@ Các bạn quan tâm đến lý thuyết về Rsyslog, vui lòng tham khảo bà
 
 - Thực hành về [Rsyslog](docs/Rsyslog-apache-nginx.MD)
 - Thực hành về [Graylog](#)
+- [Logrotate và 10 ví dụ](docs/10-Examples.md)
