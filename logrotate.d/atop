@@ -1,0 +1,12 @@
+## Logrotate for atop
+
+/var/log/atop/atop_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] {
+        daily
+        missingok
+        rotate 4
+        compress
+        notifempty
+        postrotate
+                systemctl restart atop > /dev/null 2>&1
+        endscript
+}
