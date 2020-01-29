@@ -3,10 +3,11 @@
 /var/log/atop/atop_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] {
         daily
         missingok
-        rotate 4
+        rotate 3
         compress
         notifempty
         postrotate
+                find /var/log/atop/ -mtime +3 -delete
                 systemctl restart atop > /dev/null 2>&1
         endscript
 }
